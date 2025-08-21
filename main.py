@@ -3,8 +3,8 @@ from fastapi import FastAPI, APIRouter
 app = FastAPI()
 router = APIRouter()
 
-@router.post("/")
-def root(name: str):
-    return {"Hello": f"Your name is {name}"}
+@router.get("/")
+def root():
+    return {"Hello": "This is calling from Nandini's server"}
 
 app.include_router(router=router)
