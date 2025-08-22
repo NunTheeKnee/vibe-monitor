@@ -1,0 +1,10 @@
+version: '2'
+services:
+  hello-api:
+    container_name: hello-api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: 'on-failure'
+    ports:
+      - 5000:5000
