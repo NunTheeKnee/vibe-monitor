@@ -28,7 +28,7 @@ async def middle_func(request, call_next):
     response = await call_next(request)
     duration = time() - start_time
     method = request.method
-    endpoint = request.url
+    endpoint = request.url.path
     print(f"Request: {method} {endpoint} completed in {duration}s")
     request_count.labels(method=method, endpoint=endpoint).inc()
     request_latency.labels(method=method, endpoint=endpoint).observe(duration)
