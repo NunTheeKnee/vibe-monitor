@@ -23,3 +23,12 @@ services:
     image: grafana/grafana
     ports:
       - "3000:3000"
+  
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: loki
+    command: -config.file=/etc/loki/loki-config.yml
+    volumes:
+      - ./loki-config.yml:/etc/loki/loki-config.yml:ro
+    ports:
+      - "3100:3100"
