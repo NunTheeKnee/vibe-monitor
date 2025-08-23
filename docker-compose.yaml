@@ -32,3 +32,11 @@ services:
       - ./loki-config.yml:/etc/loki/loki-config.yml:ro
     ports:
       - "3100:3100"
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    container_name: promtail
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: -config.file=/etc/promtail/promtail-config.yml
+  
