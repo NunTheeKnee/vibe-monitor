@@ -4,12 +4,6 @@ import prometheus_client
 from fastapi import FastAPI, APIRouter, Response
 from fastapi.middleware.cors import CORSMiddleware
 from time import time
-from opentelemetry import trace
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
-from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
-from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 app = FastAPI(debug=True)
 app.add_middleware(
@@ -26,21 +20,6 @@ request_count = prometheus_client.Counter(
 
 request_latency = prometheus_client.Histogram(
     'requests_latency', 'Request duration', ['method', 'endpoint']
-)
-
-resource = Resource(attributes={
-    "service.name": "nandini-fastapi-service"
-})
-
-trace.set_tracer_provider(TracerProvider(resource=resource))
-
-otlp_exporter = OTLPSpanExporter(
-    endpoint="http://localhost:4317",
-    insecure=True
-)
-
-trace.get_tracer_provider().add_span_processor(
-    BatchSpanProcessor(otlp_exporter)
 )
 
 @app.middleware("http")
@@ -68,7 +47,6 @@ async def root():
     return {"Hello": f"This is calling from Nandini's server {random.randint(1,100)}"}
 
 app.include_router(router=router)
-FastAPIInstrumentor().instrument_app(app)
 
 if __name__ == "__main__":
     uvicorn.run(app, host='0.0.0.0', port=5000)
