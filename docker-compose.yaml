@@ -40,3 +40,14 @@ services:
     - ./promtail-config.yml:/etc/promtail/promtail-config.yml:ro
     - /var/run/docker.sock:/var/run/docker.sock:ro
     command: -config.file=/etc/promtail/promtail-config.yml
+  
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "16686:16686" 
+      - "4317:4317"
+      - "4318:4318"
+    environment:
+      - LOG_LEVEL=info
+    restart: unless-stopped
