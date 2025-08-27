@@ -1,4 +1,3 @@
-version: '2'
 services:
   hello-api:
     container_name: hello-api
