@@ -49,7 +49,14 @@ async def middle_func(request: Request, call_next):
     duration = time() - start_time
     method = request.method
     endpoint = request.url.path
-    print(f"Request: {method} {endpoint} completed in {duration}s")
+    span = trace.get_current_span()
+    span_context = span.get_span_context()
+    if span_context.is_valid:
+        trace_id = format(span_context.trace_id, "032x")
+        span_id = format(span_context.span_id, "016x")
+        print(f"Request: {method} {endpoint} completed in {duration:.4f}s | trace_id={trace_id} span_id={span_id}")
+    else:
+        print(f"Request: {method} {endpoint} completed in {duration:.4f}s | no valid trace")
     request_count.labels(method=method, endpoint=endpoint).inc()
     request_latency.labels(method=method, endpoint=endpoint).observe(duration)
     return response
